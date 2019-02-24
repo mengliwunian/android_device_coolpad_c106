@@ -1,0 +1,61 @@
+# Copyright (c) 2016, coolpad. All rights reserved.
+#
+#
+# For all coolpad projects defined in device/coolpad
+
+import init.yl.device.rc
+
+service fingerprintd /system/bin/fingerprintd
+    class late_start
+    user system
+    writepid /dev/cpuset/system-background/tasks
+
+on early-boot
+     # SSR Setup
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "related"
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level "related"
+
+on boot
+    # Update foreground cpuset now that processors are up
+    # reserve CPU 3 for the top app and camera daemon
+    write /dev/cpuset/foreground/cpus 0-2,4-5
+    write /dev/cpuset/foreground/boost/cpus 4-5
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+    write /dev/cpuset/top-app/cpus 0-5
+
+    # Add a cpuset for the camera daemon
+    # we want all the little cores for camera
+    mkdir /dev/cpuset/camera-daemon
+    write /dev/cpuset/camera-daemon/cpus 0-3
+    write /dev/cpuset/camera-daemon/mems 0
+    chown system system /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon/tasks
+    chmod 0664 /dev/cpuset/camera-daemon/tasks
+
+	# Zeusis product specific init rc configs go here
+    chown system camera /dev/rk_preisp
+    chmod 0660 /dev/rk_preisp
+    chown system system /sys/class/leds/led:switch/brightness
+    chown system system /sys/class/leds/led:flash_0/brightness
+    chown system system /sys/class/leds/led:torch_0/brightness
+    chown system system /sys/class/leds/led:flash_1/brightness
+    chown system system /sys/class/leds/led:torch_1/brightness
+    chmod 0660 /sys/class/leds/led:switch/brightness
+    chmod 0660 /sys/class/leds/led:flash_0/brightness
+    chmod 0660 /sys/class/leds/led:torch_0/brightness
+    chmod 0660 /sys/class/leds/led:flash_1/brightness
+    chmod 0660 /sys/class/leds/led:torch_1/brightness
+
+on post-fs-data
+    #camera factory info
+    chmod 0755 /dev/camera0
+    chown radio system /dev/camera0
+    chmod 0755 /dev/camera1
+    chown radio system /dev/camera1
+    chmod 0755 /dev/camera2
+    chown radio system /dev/camera2
+
+

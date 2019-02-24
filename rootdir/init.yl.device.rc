@@ -1,0 +1,23 @@
+# Copyright (c) 2016, coolpad. All rights reserved.
+#
+#
+# For all coolpad projects defined in device/coolpad
+# Copyright (c) 2016, coolpad. All rights reserved.
+#
+
+on boot
+    chown system system  /dev/goodix_fp
+    chmod 0644 /dev/goodix_fp
+    chown system system  /system/bin/gx_fpd
+    chmod 0755 /system/bin/gx_fpd
+
+ service gx_fpd /system/bin/gx_fpd
+    class core
+    user system
+    group system
+    writepid /dev/cpuset/system-background/tasks
+
+ service fingerprintd /system/bin/fingerprintd
+    class late_start
+    user system
+    writepid /dev/cpuset/system-background/tasks 
