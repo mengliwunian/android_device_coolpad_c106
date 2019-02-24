@@ -33,13 +33,6 @@ etc/camera/s5k3m2xm_chromatix.xml
 etc/camera/s5k3m2xx_chromatix.xml
 etc/camera/s5k3p3sm_chromatix.xml
 
-# Camera caf hal (can be replaced by oss)
-lib/hw/camera.msm8952.so:lib/hw/camera.vendor.msm8952.so
-lib/libmm-qcamera.so
-lib/libmmcamera_interface.so
-lib/libmmjpeg_interface.so
-lib/libqomx_core.so
-
 # Camera
 bin/mm-qcamera-daemon
 lib/libarcsoft_antishaking.so
